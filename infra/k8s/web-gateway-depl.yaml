@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sc-web-gateway-depl
+  namespace: development
+  labels:
+    app: sc-web-gateway
+spec:
+  selector:
+    matchLabels:
+      app: sc-web-gateway
+  template:
+    metadata:
+      labels:
+        app: sc-web-gateway
+    spec:
+      containers:
+      - name: sc-web-gateway
+        image: pawelgozdz/sc-web-gateway
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: Never
+        envFrom:
+          - secretRef:
+              name: sc-web-gateway-secret
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sc-web-gateway-svc
+  namespace: development
+spec:
+  type: ClusterIP
+  selector:
+    app: sc-web-gateway
+  ports:
+    - port: 3000

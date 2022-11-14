@@ -13,6 +13,7 @@ build:
   tagPolicy:
     gitCommit: {}
   artifacts:
+
   - image: pawelgozdz/sc-auth
     docker:
       dockerfile: Dockerfile
@@ -23,9 +24,32 @@ build:
       - src: 'src/**/*.ts'
         dest: .
 
+  - image: pawelgozdz/sc-web-gateway
+    docker:
+      dockerfile: Dockerfile
+      target: development
+    context: api-gateway-web
+    sync:
+      manual:
+      - src: 'src/**/*.ts'
+        dest: .
+
+
 portForward:
   - resourceType: deployment
-    resourceName: sc-auth
+    resourceName: sc-auth-depl
+    namespace: development
+    port: 3001
+    localPort: 3001
+
+  - resourceType: deployment
+    resourceName: sc-web-gateway-depl
     namespace: development
     port: 3000
-    localPort: 3001
+    localPort: 3000
+
+  - resourceType: deployment
+    resourceName: sc-auth-pg-depl
+    namespace: development
+    port: 5432
+    localPort: 5432

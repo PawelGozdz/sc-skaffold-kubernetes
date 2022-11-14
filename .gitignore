@@ -1,8 +1,5 @@
-.vscode/launch.json
-later/auth-mongo-depl.yaml
-later/auth-redis-depl.yaml
-later/ingress-srv.yaml
-later/namespace-dev.yaml
-later/namespace-prod.yaml
-later/quiz-depl.yaml
-later/quiz-postgres-depl.yaml
+.vscode/**/*
+later/**/*
+databases/**/*
+auth/
+api-gateway-web/

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sc-auth-pg-depl
+  namespace: development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sc-auth-pg
+  template:
+    metadata:
+      labels:
+        app: sc-auth-pg
+    spec:
+      containers:
+        - name: sc-auth-pg
+          image: postgres
+          ports:
+          - containerPort: 5432
+          imagePullPolicy: Never
+          envFrom:
+            - secretRef:
+                name: sc-auth-pg-secret
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: sc-auth-pg-pv-vol
+      volumes:
+        - name: sc-auth-pg-pv-vol
+          persistentVolumeClaim:
+            claimName: sc-auth-pg-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sc-auth-pg-svc
+  namespace: development
+spec:
+  selector:
+    app: sc-auth-pg
+  type: NodePort
+  ports:
+    - name: sc-auth-pg
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
